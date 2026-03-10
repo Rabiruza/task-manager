@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 from datetime import datetime
 from app.database import get_db, logs_collection
@@ -12,6 +12,13 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
+
+    @field_validator("title")
+    @classmethod
+    def title_must_not_be_empty(cls, value):
+        if not value or not value.strip():
+            raise ValueError("Title cannot be empty or whitespace")
+        return value.strip()
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None

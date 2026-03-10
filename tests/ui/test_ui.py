@@ -25,9 +25,11 @@ def test_complete_task(task_page: TaskPage):
     task_page.open()
     task_page.add_task("Task to complete")
     task_page.page.wait_for_timeout(1000)
-    task_page.complete_task(0)
+
+    count = task_page.get_tasks_count()
+    task_page.complete_task(count - 1)
     task_page.page.wait_for_timeout(1000)
-    assert task_page.is_task_completed(0) == True
+    assert task_page.is_task_completed(count - 1) == True
 
 @pytest.mark.ui
 def test_delete_task(task_page: TaskPage):

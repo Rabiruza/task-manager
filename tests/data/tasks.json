@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Fix login bug",
+    "description": "Users cannot login with special characters in password",
+    "expected_completed": false
+  },
+  {
+    "title": "Write API documentation",
+    "description": "Document all endpoints in Swagger",
+    "expected_completed": false
+  },
+  {
+    "title": "Setup CI/CD pipeline",
+    "description": "Configure GitHub Actions for automated testing",
+    "expected_completed": false
+  },
+  {
+    "title": "Code review",
+    "description": null,
+    "expected_completed": false
+  },
+  {
+    "title": "Deploy to staging",
+    "description": "Deploy version 1.2.0 to staging environment",
+    "expected_completed": false
+  },
+  {
+    "title": "Performance testing",
+    "description": "Run load tests with 100 concurrent users",
+    "expected_completed": false
+  }
+]

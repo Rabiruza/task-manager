@@ -1,0 +1,17 @@
+[
+  {
+    "title": "",
+    "description": "Empty title",
+    "expected_status": 422
+  },
+  {
+    "title": null,
+    "description": "Null title",
+    "expected_status": 422
+  },
+  {
+    "title": "   ",
+    "description": "Whitespace title",
+    "expected_status": 422
+  }
+]
