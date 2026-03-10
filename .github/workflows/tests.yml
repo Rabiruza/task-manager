@@ -1,0 +1,70 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: task_manager
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      mongodb:
+        image: mongo:6
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Install Playwright browsers
+      run: python -m playwright install --with-deps chromium
+
+    - name: Create .env file
+      run: |
+        echo "POSTGRES_HOST=localhost" >> .env
+        echo "POSTGRES_PORT=5432" >> .env
+        echo "POSTGRES_DB=task_manager" >> .env
+        echo "POSTGRES_USER=postgres" >> .env
+        echo "POSTGRES_PASSWORD=postgres" >> .env
+        echo "MONGO_HOST=localhost" >> .env
+        echo "MONGO_PORT=27017" >> .env
+        echo "MONGO_DB=task_manager" >> .env
+
+    - name: Start FastAPI app
+      run: |
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+        sleep 3
+
+    - name: Run API tests
+      run: python -m pytest -m api -v
+
+    - name: Run DB tests
+      run: python -m pytest -m db -v
+
+    - name: Run UI tests
+      run: python -m pytest -m ui -v
